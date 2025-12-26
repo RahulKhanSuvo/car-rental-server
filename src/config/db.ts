@@ -34,9 +34,7 @@ const initDB = async () => {
     await pool.query(`CREATE TABLE IF NOT EXISTS vehicles(id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY, vehicle_name TEXT NOT NULL,
     type vehicle_type NOT NULL,
     daily_rent_price NUMERIC(10,2) NOT NULL CHECK (daily_rent_price > 0),
-    availability_status availability_status NOT NULL DEFAULT 'available'
-
-         );`)
+    availability_status availability_status NOT NULL DEFAULT 'available');`)
 };
 
 export default initDB;

@@ -1,7 +1,13 @@
-import express from "express"
+import express, { Request, Response } from "express"
+import { authRouters } from "./modules/auth/auth.routes"
 
 const app = express()
-app.get('/', (req, res) => {
-    res.send('Hello World!')
+app.use(express.json());
+app.get('/api/v1', (req: Request, res: Response) => {
+    res.send('Hello 👋')
 })
+app.use("/api/v1/auth", authRouters)
+// app.use("/users",)
+
+
 export default app
