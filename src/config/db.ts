@@ -8,18 +8,22 @@ export const pool = new Pool({
 const initDB = async () => {
     // user role enum
     await pool.query(`
-    DO $$
-    BEGIN
-      IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'user_role') THEN
-        CREATE TYPE user_role AS ENUM ('admin', 'customer');
-      END IF;
-      IF NOT EXISTS(SELECT 1 FORM pg_type WHERE  typname ='availability_status') THEN CREATE user_role AS ENUM (available', 'booked');
-      END IF;
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'user_role') THEN
+    CREATE TYPE user_role AS ENUM ('admin', 'customer');
+  END IF;
 
-      IF NOT EXISTS(SELECT 1 FORM pg_type WHERE  typname ='vehicle_type') THEN CREATE user_role AS ENUM ('car', 'bike', 'van', 'SUV');
-      END IF;
-    END$$;
-  `);
+  IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'availability_status') THEN
+    CREATE TYPE availability_status AS ENUM ('available', 'booked');
+  END IF;
+
+  IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'vehicle_type') THEN
+    CREATE TYPE vehicle_type AS ENUM ('car', 'bike', 'van', 'SUV');
+  END IF;
+END$$;
+`);
+
     // vehicle enums====
     await pool.query(`
     CREATE TABLE IF NOT EXISTS users (
