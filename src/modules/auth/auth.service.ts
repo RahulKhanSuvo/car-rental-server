@@ -6,6 +6,9 @@ const createUser = async (payload: Record<string, unknown>) => {
     return await pool.query(`INSERT INTO users(name,email,password,phone,role) VALUES($1,$2,$3,$4,$5) RETURNING *`, [name, email, hashPassword, phone, role])
 
 }
+const signIn = async (payload: Record<string, unknown>) => {
+
+}
 export const authServices = {
     createUser
 }
