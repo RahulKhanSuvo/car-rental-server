@@ -36,8 +36,8 @@ END$$;
     );
   `);
   await pool.query(`CREATE TABLE IF NOT EXISTS vehicles(id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY, vehicle_name TEXT NOT NULL,
-    type vehicle_type NOT NULL UNIQUE,
-    registration_number TEXT NOT NULL,
+    type vehicle_type NOT NULL,
+    registration_number TEXT NOT NULL UNIQUE,
     daily_rent_price NUMERIC(10,2) NOT NULL CHECK (daily_rent_price > 0),
     availability_status availability_status NOT NULL DEFAULT 'available');`)
 };
