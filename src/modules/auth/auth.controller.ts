@@ -18,11 +18,11 @@ const signUpUser = async (req: Request, res: Response) => {
 }
 const signIn = async (req: Request, res: Response) => {
     try {
-        const result = await authServices.createUser(req.body)
+        const result = await authServices.signIn(req.body)
         res.status(201).json({
             success: true,
-            message: "User create successfully",
-            data: result.rows[0]
+            message: "Sign in successfully",
+            data: result
         })
     } catch (error: any) {
         res.status(500).json({
@@ -32,5 +32,6 @@ const signIn = async (req: Request, res: Response) => {
     }
 }
 export const authController = {
-    signUpUser
+    signUpUser,
+    signIn
 }
