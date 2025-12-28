@@ -40,6 +40,9 @@ const updateUserById = async (req: Request, res: Response) => {
     }
     try {
         const result = await userServices.updateUserById(id!, name, email, phone, role)
+        if (result.rowCount === 0) {
+            return res.status(404).json({ success: false, status: 404, message: "User not found" })
+        }
         res.status(200).json({
             success: true,
             message: "User updated successfully",
