@@ -40,7 +40,30 @@ const getAllVehicles = async (req: Request, res: Response) => {
         })
     }
 }
+const getVehiclesById = async (req: Request, res: Response) => {
+    const { id } = req.params
+    try {
+        const result = await vehicleServices.getVehiclesById(id as string)
+        if (result.rows.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "vehicles not found"
+            })
+        } else {
+            res.status(200).json({
+                success: true,
+                message: "Vehicle retrieved successfully",
+                data: result.rows[0]
+            })
+        }
 
+    } catch (error: any) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        })
+    }
+}
 export const vehicleController = {
-    createVehicle, getAllVehicles
+    createVehicle, getAllVehicles, getVehiclesById
 }

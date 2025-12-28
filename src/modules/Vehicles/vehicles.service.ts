@@ -8,6 +8,9 @@ const createVehicle = async (payload: Record<string, unknown>) => {
 const getAllVehicles = async () => {
     return await pool.query(`SELECT * FROM vehicles`)
 }
+const getVehiclesById = async (id: string) => {
+    return await pool.query(`SELECT * FROM vehicles WHERE id=$1`, [id])
+}
 export const vehicleServices = {
-    createVehicle, getAllVehicles
+    createVehicle, getAllVehicles, getVehiclesById
 }
