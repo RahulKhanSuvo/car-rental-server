@@ -38,8 +38,33 @@ END$$;
   await pool.query(`CREATE TABLE IF NOT EXISTS vehicles(id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY, vehicle_name TEXT NOT NULL,
     type vehicle_type NOT NULL,
     registration_number TEXT NOT NULL UNIQUE,
-    daily_rent_price NUMERIC(10,2) NOT NULL CHECK (daily_rent_price > 0),
-    availability_status availability_status NOT NULL DEFAULT 'available');`)
+    daily_rent_price NUMERIC(10) NOT NULL CHECK (daily_rent_price > 0),
+    availability_status availability_status NOT NULL DEFAULT 'active');`);
+  await pool.query(`
+  CREATE TABLE IF NOT EXISTS bookings (
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+
+    customer_id BIGINT NOT NULL
+      REFERENCES users(id) ON DELETE CASCADE,
+
+    vehicle_id BIGINT NOT NULL
+      REFERENCES vehicles(id) ON DELETE CASCADE,
+
+    rent_start_date DATE NOT NULL,
+    rent_end_date DATE NOT NULL,
+
+    total_price NUMERIC(10) NOT NULL
+      CHECK (total_price > 0),
+
+    status TEXT DEFAULT 'active'
+      CHECK (status IN ('active', 'cancelled', 'returned')),
+
+    created_at TIMESTAMP DEFAULT NOW(),
+
+    CHECK (rent_end_date > rent_start_date)
+  );
+`);
+
 };
 
 export default initDB;
