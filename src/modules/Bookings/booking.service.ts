@@ -116,8 +116,51 @@ const getAllBookings = async (user: any) => {
   const result = await pool.query(query, values)
   return result.rows
 }
+const updateBookingById = async (id: string, status: string, authUser: any) => {
+  // 1️⃣ Fetch the booking first
+  const bookingResult = await pool.query(`SELECT * FROM bookings WHERE id=$1`, [id]);
+  const booking = bookingResult.rows[0];
+  if (!booking) {
+    throw new Error("Booking not found");
+  }
+  if (
+    (status === "returned" && authUser.role !== "admin") ||
+    (status === "cancelled" && authUser.role !== "admin" && authUser.id !== booking.customer_id)
+  ) {
+    throw new Error("Unauthorized");
+  }
+
+  const updatedBookingResult = await pool.query(
+    `UPDATE bookings SET status=$1 WHERE id=$2 RETURNING *`,
+    [status, id]
+  );
+  const updatedBooking = updatedBookingResult.rows[0];
+
+  let vehicleUpdate = null;
+
+  if (status === "returned") {
+    vehicleUpdate = await pool.query(
+      `UPDATE vehicles SET availability_status='available' WHERE id=$1 RETURNING availability_status`,
+      [booking.vehicle_id]
+    );
+  }
+
+
+  return {
+    success: true,
+    message:
+      status === "returned"
+        ? "Booking marked as returned. Vehicle is now available"
+        : "Booking cancelled successfully",
+    data: {
+      ...updatedBooking,
+      vehicle: vehicleUpdate ? vehicleUpdate.rows[0] : undefined,
+    },
+  };
+};
 
 export const bookingServices = {
   createBooking,
-  getAllBookings
+  getAllBookings,
+  updateBookingById
 }
