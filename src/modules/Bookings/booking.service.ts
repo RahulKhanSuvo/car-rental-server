@@ -81,7 +81,10 @@ const createBooking = async (booking: any) => {
     client.release()
   }
 }
-
+const getAllBookings = async () => {
+  return await pool.query(`SELECT * FROM bookings`)
+}
 export const bookingServices = {
-  createBooking
+  createBooking,
+  getAllBookings
 }

@@ -4,6 +4,7 @@ import config from "../config";
 const auth = (...roles: string[]) => {
     return async (req: Request, res: Response, next: NextFunction) => {
         const autHeader = req.headers.authorization;
+        console.log(autHeader);
         if (!autHeader || !autHeader.startsWith("Bearer ")) {
             return res.status(401).json({
                 success: false,
