@@ -81,8 +81,12 @@ const createBooking = async (booking: any) => {
     client.release()
   }
 }
-const getAllBookings = async () => {
-  return await pool.query(`SELECT * FROM bookings`)
+const getAllBookings = async (user: any) => {
+  if (user.role === "admin") {
+    return await pool.query(`SELECT * FROM bookings`)
+  } else {
+    return await pool.query(`SELECT * FROM bookings WHERE customer_id = $1`, [user.id])
+  }
 }
 export const bookingServices = {
   createBooking,

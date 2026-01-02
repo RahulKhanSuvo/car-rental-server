@@ -18,8 +18,10 @@ const createBooking = async (req: Request, res: Response) => {
     }
 }
 const getAllBookings = async (req: Request, res: Response) => {
+    const authUser = req.user;
+    console.log(authUser);
     try {
-        const result = await bookingServices.getAllBookings()
+        const result = await bookingServices.getAllBookings(authUser)
         return res.status(200).json({
             success: true,
             message: "All bookings retrieved successfully",
